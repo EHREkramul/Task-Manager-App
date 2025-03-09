@@ -20,11 +20,6 @@ class TaskManagerApp extends StatelessWidget {
           backgroundColor: Color.fromARGB(255, 33, 191, 115),
           foregroundColor: Colors.white,
         ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Color.fromARGB(255, 33, 191, 115),
-          foregroundColor: Colors.white,
-          shape: CircleBorder(),
-        ),
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),

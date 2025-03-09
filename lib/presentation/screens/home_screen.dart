@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
       appBar: AppBar(
         title: Row(
           spacing: 10,
@@ -32,12 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
+        backgroundColor: Color.fromARGB(255, 33, 191, 115),
+        foregroundColor: Colors.white,
+        shape: CircleBorder(),
         child: Icon(Icons.add, size: 30),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         backgroundColor: Colors.white,
-        selectedItemColor: Colors.green,
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.black,
         unselectedLabelStyle: TextStyle(color: Colors.black),
         items: [
@@ -59,12 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
-        spacing: 10,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Row(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          spacing: 10,
+          children: [
+            Row(
               children: [
                 HomeCard(count: '09', status: 'Canceled'),
                 HomeCard(count: '10', status: 'Completed'),
@@ -72,22 +74,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 HomeCard(count: '02', status: 'New Task'),
               ],
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder:
-                  (context, index) => TaskItem(
-                    index: index,
-                    status: 'Completed',
-                    title: 'Lorem Ipsum is simply dummy',
-                    date: DateTime.now(),
-                    description:
-                        'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-                  ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 10,
+                itemBuilder:
+                    (context, index) => TaskItem(
+                      index: index,
+                      status: 'Completed',
+                      title: 'Lorem Ipsum is simply dummy',
+                      date: DateTime.now(),
+                      description:
+                          'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+                    ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
