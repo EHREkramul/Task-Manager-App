@@ -33,6 +33,7 @@ class AddNewTaskScreen extends StatelessWidget {
               Text('Add New Task', style: TextTheme.of(context).headlineLarge),
               TextFormField(
                 autofocus: true,
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(labelText: 'Subject'),
               ),
               TextFormField(

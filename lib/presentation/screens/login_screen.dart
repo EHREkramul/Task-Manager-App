@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/presentation/screens/forgot_pass_verify_email_screen.dart';
+import 'package:taskmanager/presentation/screens/home_screen.dart';
 import 'package:taskmanager/presentation/screens/sign_up_screen.dart';
+import 'package:taskmanager/presentation/utils/assets_paths.dart';
 
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
@@ -16,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _passwordObscure = true;
+  String _iconName = AssetsPath.openEyePNG;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +47,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   controller: _passwordTEController,
                   keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  obscuringCharacter: '*',
+                  obscureText: _passwordObscure,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _passwordObscure = !_passwordObscure;
+                          _iconName =
+                              _passwordObscure
+                                  ? AssetsPath.openEyePNG
+                                  : AssetsPath.hideEyePNG;
+                        });
+                      },
+                      icon: ImageIcon(AssetImage(_iconName), size: 25.0),
+                    ),
+                  ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _onTapLoginButton,
                   child: Icon(
                     Icons.arrow_circle_right_outlined,
                     color: Colors.white,
@@ -89,6 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SignUpScreen()),
+    );
+  }
+
+  void _onTapLoginButton() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+      (route) => false,
     );
   }
 

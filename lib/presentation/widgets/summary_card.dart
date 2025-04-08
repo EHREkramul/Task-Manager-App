@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeCard extends StatelessWidget {
-  const HomeCard({super.key, required this.status, this.count = '00'});
+class SummaryCard extends StatelessWidget {
+  const SummaryCard({super.key, required this.status, this.count = '00'});
 
   final String count;
   final String status;
@@ -24,14 +24,15 @@ class HomeCard extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(
                   count,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 Text(
                   status,
-                  style: TextStyle(
-                    fontSize: 8,
-                    color: Color.fromARGB(255, 102, 102, 102),
-                  ),
+                  style: TextStyle(fontSize: 8, color: Colors.black),
                 ),
               ],
             ),

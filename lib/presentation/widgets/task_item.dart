@@ -9,6 +9,7 @@ class TaskItem extends StatelessWidget {
     required this.date,
     required this.status,
     required this.index,
+    required this.statusColor,
   });
 
   final String title;
@@ -16,6 +17,7 @@ class TaskItem extends StatelessWidget {
   final DateTime date;
   final String status;
   final int index;
+  final Color statusColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +37,8 @@ class TaskItem extends StatelessWidget {
           children: [
             Text(
               description,
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 10, color: Colors.grey),
             ),
-
             Text(
               'Date: ${DateFormat('dd MMMM, yyyy hh:mm a').format(date)}',
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
@@ -48,37 +46,31 @@ class TaskItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(20, 30),
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(status),
+                Chip(
+                  label: Text(status, style: TextStyle(color: Colors.white)),
+                  backgroundColor: statusColor,
+                  side: BorderSide.none,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                 ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      icon: Icon(Icons.edit_note, color: Colors.green),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      icon: Icon(Icons.delete, color: Colors.redAccent),
-                    ),
-                  ],
+                Spacer(),
+                IconButton(
+                  onPressed: () {},
+                  style: IconButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  icon: Icon(Icons.edit_note, color: Colors.green),
+                ),
+                SizedBox(width: 8),
+                IconButton(
+                  onPressed: () {},
+                  style: IconButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  icon: Icon(Icons.delete, color: Colors.redAccent),
                 ),
               ],
             ),

@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/add_new_task_screen.dart';
-import 'package:taskmanager/presentation/screens/profile_screen.dart';
 
-import '../presentation/screens/sign_up_screen.dart';
-import '../presentation/screens/home_screen.dart';
-import '../presentation/screens/set_password_screen.dart';
-import '../presentation/screens/forget_pass_pin_verification_screen.dart';
-import '../presentation/screens/forgot_pass_verify_email_screen.dart';
-import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
@@ -17,7 +9,7 @@ class TaskManagerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 33, 191, 115),
+        primaryColor: Colors.green,
         appBarTheme: AppBarTheme(
           backgroundColor: Color.fromARGB(255, 33, 191, 115),
           foregroundColor: Colors.white,

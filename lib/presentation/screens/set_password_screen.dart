@@ -70,9 +70,10 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   }
 
   void _onTapSubmitButton() {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
+          (route) => false,
     );
   }
 
