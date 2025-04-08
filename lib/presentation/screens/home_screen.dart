@@ -37,26 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.add, size: 30),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: 1,
         backgroundColor: Colors.white,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.black,
-        unselectedLabelStyle: TextStyle(color: Colors.black),
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.note_rounded),
+            icon: Icon(Icons.sticky_note_2_outlined),
             label: 'New Task',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note_rounded),
+            icon: Icon(Icons.sticky_note_2_outlined),
             label: 'Completed',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note_rounded),
+            icon: Icon(Icons.sticky_note_2_outlined),
             label: 'Canceled',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note_rounded),
+            icon: Icon(Icons.sticky_note_2_outlined),
             label: 'Progress',
           ),
         ],

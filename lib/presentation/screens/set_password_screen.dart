@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
+import 'login_screen.dart';
 
 class SetPasswordScreen extends StatefulWidget {
   const SetPasswordScreen({super.key});
@@ -11,6 +12,10 @@ class SetPasswordScreen extends StatefulWidget {
 }
 
 class _SetPasswordScreenState extends State<SetPasswordScreen> {
+  final TextEditingController _passwordTEController = TextEditingController();
+  final TextEditingController _confirmPassTEController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,29 +37,58 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   ),
                   Text(
                     'Minimum length password 8 character with Latter and number combination',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextTheme.of(context).bodyMedium,
                   ),
                 ],
               ),
               TextFormField(
+                controller: _passwordTEController,
+                textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(labelText: 'Password'),
               ),
               TextFormField(
+                controller: _confirmPassTEController,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(labelText: 'Confirm Password'),
               ),
-              ElevatedButton(onPressed: () {}, child: Text('Confirm')),
+              ElevatedButton(
+                onPressed: _onTapSubmitButton,
+                child: Text('Confirm'),
+              ),
               SizedBox(height: 25),
               BottomTexts(
                 directionText: 'Have account?',
                 buttonText: 'Sign in',
-                onClick: () {},
+                onClick: _onTapSignInButton,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onTapSubmitButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
+
+  void _onTapSignInButton() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (route) => false,
+    );
+  }
+
+  @override
+  void dispose() {
+    _passwordTEController.dispose();
+    _confirmPassTEController.dispose();
+
+    super.dispose();
   }
 }

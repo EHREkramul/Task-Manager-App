@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:taskmanager/presentation/screens/login_screen.dart';
+import 'package:taskmanager/presentation/screens/set_password_screen.dart';
 
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 
-class PinVerificationScreen extends StatefulWidget {
-  const PinVerificationScreen({super.key});
+class ForgetPassPinVerificationScreen extends StatefulWidget {
+  const ForgetPassPinVerificationScreen({super.key});
 
   @override
-  State<PinVerificationScreen> createState() => _PinVerificationScreenState();
+  State<ForgetPassPinVerificationScreen> createState() =>
+      _ForgetPassPinVerificationScreenState();
 }
 
-class _PinVerificationScreenState extends State<PinVerificationScreen> {
+class _ForgetPassPinVerificationScreenState
+    extends State<ForgetPassPinVerificationScreen> {
+  final TextEditingController _pinCodeTEController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,42 +38,68 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     style: TextTheme.of(context).headlineLarge,
                   ),
                   Text(
-                    'A 6 digit verification pin will send to your email address',
-                    style: TextStyle(color: Colors.grey),
+                    'A 6 digit verification pin has been send to your email address',
+                    style: TextTheme.of(context).bodyMedium,
                   ),
                 ],
               ),
               PinCodeTextField(
-                appContext: context,
-                keyboardType: TextInputType.number,
-                length: 6, // 6-digit OTP
+                length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
+                keyboardType: TextInputType.number,
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(5),
                   fieldHeight: 50,
                   fieldWidth: 40,
                   activeFillColor: Colors.white,
-                  inactiveFillColor: Colors.white,
+                  activeColor: Colors.white,
                   selectedFillColor: Colors.white,
-                  activeColor: Colors.blueAccent, // Border color when typing
-                  inactiveColor: Colors.grey, // Default border color
+                  inactiveFillColor: Colors.white,
                 ),
                 animationDuration: Duration(milliseconds: 300),
+                backgroundColor: Colors.transparent,
                 enableActiveFill: true,
+                controller: _pinCodeTEController,
+                appContext: context,
               ),
-              ElevatedButton(onPressed: () {}, child: Text('Verify')),
+              ElevatedButton(
+                onPressed: _onTapVerifyButton,
+                child: Text('Verify'),
+              ),
               SizedBox(height: 20),
               BottomTexts(
                 directionText: 'Have account?',
                 buttonText: 'Sign in',
-                onClick: () {},
+                onClick: _onTapSignInButton,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onTapSignInButton() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (route) => false,
+    );
+  }
+
+  void _onTapVerifyButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SetPasswordScreen()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pinCodeTEController.dispose();
+
+    super.dispose();
   }
 }

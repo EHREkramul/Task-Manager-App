@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/presentation/screens/forget_pass_pin_verification_screen.dart';
 
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 
-class ForgotPassScreen extends StatefulWidget {
-  const ForgotPassScreen({super.key});
+class ForgotPassVerifyEmailScreen extends StatefulWidget {
+  const ForgotPassVerifyEmailScreen({super.key});
 
   @override
-  State<ForgotPassScreen> createState() => _ForgotPassScreenState();
+  State<ForgotPassVerifyEmailScreen> createState() =>
+      _ForgotPassVerifyEmailScreenState();
 }
 
-class _ForgotPassScreenState extends State<ForgotPassScreen> {
+class _ForgotPassVerifyEmailScreenState
+    extends State<ForgotPassVerifyEmailScreen> {
+
+  final TextEditingController _emailTEController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,16 +37,17 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                   ),
                   Text(
                     'A 6 digit verification pin will send to your email address',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextTheme.of(context).bodyMedium,
                   ),
                 ],
               ),
               TextFormField(
+                controller: _emailTEController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(labelText: 'Email'),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _onTapSubmitButton,
                 child: Icon(
                   Icons.arrow_circle_right_outlined,
                   color: Colors.white,
@@ -51,12 +58,23 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               BottomTexts(
                 directionText: 'Have account?',
                 buttonText: 'Sign in',
-                onClick: () {},
+                onClick: () => Navigator.pop(context),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onTapSubmitButton(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassPinVerificationScreen(),));
+  }
+
+  @override
+  void dispose() {
+    _emailTEController.dispose();
+
+    super.dispose();
   }
 }

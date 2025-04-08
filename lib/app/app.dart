@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/presentation/screens/add_new_task_screen.dart';
+import 'package:taskmanager/presentation/screens/profile_screen.dart';
 
 import '../presentation/screens/sign_up_screen.dart';
 import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/set_password_screen.dart';
-import '../presentation/screens/pin_verification_screen.dart';
-import '../presentation/screens/forgot_pass_Screen.dart';
+import '../presentation/screens/forget_pass_pin_verification_screen.dart';
+import '../presentation/screens/forgot_pass_verify_email_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/splash_screen.dart';
 
@@ -25,8 +27,8 @@ class TaskManagerApp extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(4)),
             borderSide: BorderSide(color: Colors.transparent),
           ),
-          fillColor: Colors.white,
           filled: true,
+          fillColor: Colors.white,
           labelStyle: TextStyle(color: Colors.grey),
           hintStyle: TextStyle(color: Colors.grey),
         ),
@@ -46,6 +48,7 @@ class TaskManagerApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 46, 55, 79),
           ),
+          bodyMedium: TextStyle(color: Colors.grey),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -57,7 +60,7 @@ class TaskManagerApp extends StatelessWidget {
         ),
       ),
       title: 'Task Manager',
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }
