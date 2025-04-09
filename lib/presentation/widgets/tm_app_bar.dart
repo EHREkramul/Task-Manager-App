@@ -1,39 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/presentation/screens/login_screen.dart';
 
-class TMAppBar extends StatelessWidget implements PreferredSizeWidget{
-  const TMAppBar({
-    super.key,
-  });
+import '../screens/udpate_profile_screen.dart';
+
+class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const TMAppBar({super.key, this.fromProfileScreen});
+
+  final bool? fromProfileScreen;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Row(
-        spacing: 10,
-        children: [
-          CircleAvatar(child: Icon(Icons.account_circle, size: 40)),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Ekramul Haque',
-                  style: TextTheme.of(
-                    context,
-                  ).bodyLarge?.copyWith(color: Colors.white),
-                ),
-                Text(
-                  'ehr.ekramul@gmail.com',
-                  style: TextTheme.of(
-                    context,
-                  ).bodySmall?.copyWith(color: Colors.white),
-                ),
-              ],
+      title: GestureDetector(
+        onTap: () {
+          if (fromProfileScreen ?? false) {
+            return;
+          }
+          _onTapProfileSection(context);
+        },
+        child: Row(
+          spacing: 10,
+          children: [
+            CircleAvatar(child: Icon(Icons.account_circle, size: 40)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ekramul Haque',
+                    style: TextTheme.of(
+                      context,
+                    ).bodyLarge?.copyWith(color: Colors.white),
+                  ),
+                  Text(
+                    'ehr.ekramul@gmail.com',
+                    style: TextTheme.of(
+                      context,
+                    ).bodySmall?.copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(onPressed: (){}, icon: Icon(Icons.logout))
-        ],
+          ],
+        ),
       ),
+      actions: [
+        IconButton(
+          onPressed: () => _onTapLogoutButton(context),
+          icon: Icon(Icons.logout),
+        ),
+      ],
+    );
+  }
+
+  void _onTapProfileSection(context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+    );
+  }
+
+  void _onTapLogoutButton(context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (route) => false,
     );
   }
 

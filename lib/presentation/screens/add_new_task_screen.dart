@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/presentation/screens/home_screen.dart';
+import 'package:taskmanager/presentation/widgets/tm_app_bar.dart';
 import '../widgets/screen_background.dart';
 
 class AddNewTaskScreen extends StatelessWidget {
@@ -7,21 +9,7 @@ class AddNewTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          spacing: 10,
-          children: [
-            CircleAvatar(child: Icon(Icons.account_circle, size: 40)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Ekramul Haque', style: TextStyle(fontSize: 18)),
-                Text('ehr.ekramul@gmail.com', style: TextStyle(fontSize: 10)),
-              ],
-            ),
-          ],
-        ),
-      ),
+      appBar: TMAppBar(),
       body: ScreenBackground(
         child: Padding(
           padding: const EdgeInsets.only(left: 51.3, right: 51.3),
@@ -45,7 +33,7 @@ class AddNewTaskScreen extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _onTapSubmitButton(context),
                 child: Icon(
                   Icons.arrow_circle_right_outlined,
                   color: Colors.white,
@@ -56,6 +44,14 @@ class AddNewTaskScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _onTapSubmitButton(context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+      (route) => false,
     );
   }
 }
