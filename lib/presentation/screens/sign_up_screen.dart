@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/data/service/network_client.dart';
 import 'package:taskmanager/data/service/network_response.dart';
 import 'package:taskmanager/data/utils/urls.dart';
-import 'package:taskmanager/presentation/utils/snackbar_message.dart';
+import 'package:taskmanager/presentation/utils/snack_bar_message.dart';
 
 import '../widgets/centered_circular_progress_bar.dart';
 import 'login_screen.dart';

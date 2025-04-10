@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../data/models/login_model.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
-import '../utils/snackbar_message.dart';
+import '../controllers/auth_controller.dart';
+import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'forgot_pass_verify_email_screen.dart';
 import 'home_screen.dart';
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _passwordObscure = true;
   String _iconName = AssetsPath.openEyePNG;
-  bool _loginnInProgress = false;
+  bool _loginInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 Visibility(
-                  visible: _loginnInProgress == false,
+                  visible: _loginInProgress == false,
                   replacement: CenteredCircularProgressBar(),
                   child: ElevatedButton(
                     onPressed: _onTapLoginButton,
@@ -160,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _loginUser() async {
     setState(() {
-      _loginnInProgress = true;
+      _loginInProgress = true;
     });
     Map<String, dynamic> requestBody = {
       "email": _emailTEController.text.trim(),
@@ -171,9 +173,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: requestBody,
     );
     setState(() {
-      _loginnInProgress = false;
+      _loginInProgress = false;
     });
     if (response.isSuccess) {
+      LoginModel loginModel = LoginModel.fromJson(response.data!);
+
+      AuthController.saveUserInformation(loginModel.token!, loginModel.userModel!);
+
+      // TODO: local database setup
+      // TODO: Check Logged in/or not
+
       _clearTEControllers();
       Navigator.pushAndRemoveUntil(
         context,
