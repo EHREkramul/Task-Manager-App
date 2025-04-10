@@ -4,6 +4,7 @@ import 'package:taskmanager/data/service/network_response.dart';
 import 'package:taskmanager/data/utils/urls.dart';
 import 'package:taskmanager/presentation/utils/snackbar_message.dart';
 
+import '../widgets/centered_circular_progress_bar.dart';
 import 'login_screen.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
@@ -128,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     Visibility(
                       visible: _registrationInProgress == false,
-                      replacement: Center(child: CircularProgressIndicator()),
+                      replacement: CenteredCircularProgressBar(),
                       child: ElevatedButton(
                         onPressed: _onTapSubmitButton,
                         child: Icon(
@@ -167,6 +168,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _registerUser();
     }
   }
+  void _clearTEControllers(){
+    _emailTEController.clear();
+    _firstNameTEController.clear();
+    _lastNameTEController.clear();
+    _mobileTEController.clear();
+    _passwordTEController.clear();
+  }
 
   Future<void> _registerUser() async {
     setState(() {
@@ -188,6 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
     if (response.isSuccess) {
       showSnackBarMessage(context, 'User Registered Successfully');
+      _clearTEControllers();
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),

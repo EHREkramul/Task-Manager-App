@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../data/service/network_client.dart';
+import '../../data/service/network_response.dart';
+import '../../data/utils/urls.dart';
+import '../utils/snackbar_message.dart';
+import '../widgets/centered_circular_progress_bar.dart';
 import 'forgot_pass_verify_email_screen.dart';
 import 'home_screen.dart';
 import 'sign_up_screen.dart';
@@ -20,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _passwordObscure = true;
   String _iconName = AssetsPath.openEyePNG;
+  bool _loginnInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +49,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: 'Email'),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    String email = value?.trim() ?? '';
+
+                    final bool emailValid = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                    ).hasMatch(email);
+
+                    if (!emailValid) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _passwordTEController,
@@ -64,13 +83,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: ImageIcon(AssetImage(_iconName), size: 25.0),
                     ),
                   ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    String pass = value ?? '';
+
+                    /*final bool passValid = RegExp(
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                        ).hasMatch(pass);*/
+
+                    if (pass.isEmpty || pass.length < 6) {
+                      return 'Password length must be 6 or more';
+                    }
+                    return null;
+                  },
                 ),
-                ElevatedButton(
-                  onPressed: _onTapLoginButton,
-                  child: Icon(
-                    Icons.arrow_circle_right_outlined,
-                    color: Colors.white,
-                    size: 21.12,
+                Visibility(
+                  visible: _loginnInProgress == false,
+                  replacement: CenteredCircularProgressBar(),
+                  child: ElevatedButton(
+                    onPressed: _onTapLoginButton,
+                    child: Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: Colors.white,
+                      size: 21.12,
+                    ),
                   ),
                 ),
                 SizedBox(height: 25),
@@ -113,11 +149,40 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onTapLoginButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-      (route) => false,
+    if (_formKey.currentState!.validate()) {
+      _loginUser();
+    }
+  }
+  void _clearTEControllers(){
+    _emailTEController.clear();
+    _passwordTEController.clear();
+  }
+
+  Future<void> _loginUser() async {
+    setState(() {
+      _loginnInProgress = true;
+    });
+    Map<String, dynamic> requestBody = {
+      "email": _emailTEController.text.trim(),
+      "password": _passwordTEController.text,
+    };
+    NetworkResponse response = await NetworkClient.postRequest(
+      url: Urls.loginUrl,
+      body: requestBody,
     );
+    setState(() {
+      _loginnInProgress = false;
+    });
+    if (response.isSuccess) {
+      _clearTEControllers();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+        (route) => false,
+      );
+    } else {
+      showSnackBarMessage(context, response.errorMessage!, true);
+    }
   }
 
   @override
