@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/widgets/tm_app_bar.dart';
 
 import '../widgets/screen_background.dart';
+import '../widgets/tm_app_bar.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});

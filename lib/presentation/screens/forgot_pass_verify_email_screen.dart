@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/forget_pass_pin_verification_screen.dart';
 
+import 'forget_pass_pin_verification_screen.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 

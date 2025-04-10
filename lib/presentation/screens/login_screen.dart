@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/forgot_pass_verify_email_screen.dart';
-import 'package:taskmanager/presentation/screens/home_screen.dart';
-import 'package:taskmanager/presentation/screens/sign_up_screen.dart';
-import 'package:taskmanager/presentation/utils/assets_paths.dart';
 
+import 'forgot_pass_verify_email_screen.dart';
+import 'home_screen.dart';
+import 'sign_up_screen.dart';
+import '../utils/assets_paths.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 

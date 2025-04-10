@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:taskmanager/presentation/screens/login_screen.dart';
-import 'package:taskmanager/presentation/screens/set_password_screen.dart';
 
+import 'login_screen.dart';
+import 'set_password_screen.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 

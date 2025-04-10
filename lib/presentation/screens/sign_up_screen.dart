@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/login_screen.dart';
 
+import 'login_screen.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 

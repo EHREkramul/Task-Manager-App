@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/home_screen.dart';
-import 'package:taskmanager/presentation/widgets/tm_app_bar.dart';
+
 import '../widgets/screen_background.dart';
+import '../widgets/tm_app_bar.dart';
+import 'home_screen.dart';
 
 class AddNewTaskScreen extends StatelessWidget {
   const AddNewTaskScreen({super.key});
