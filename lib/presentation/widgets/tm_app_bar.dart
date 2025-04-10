@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/presentation/controllers/auth_controller.dart';
 
 import '../screens/login_screen.dart';
 import '../screens/update_profile_screen.dart';
@@ -60,7 +61,8 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  void _onTapLogoutButton(context) {
+  Future<void> _onTapLogoutButton(context) async {
+    await AuthController.clearUserData();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
