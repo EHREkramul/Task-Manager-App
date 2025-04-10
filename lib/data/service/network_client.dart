@@ -28,10 +28,13 @@ class NetworkClient {
           data: decodedJson,
         );
       } else {
+        final decodedJson = jsonDecode(response.body);
+        String errorMessage = decodedJson['data'] ?? 'Something went wrong';
+
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
-          errorMessage: 'Something went wrong',
+          errorMessage: errorMessage,
         );
       }
     } catch (e) {
@@ -51,17 +54,20 @@ class NetworkClient {
     try {
       Uri uri = Uri.parse(url);
       _preRequestLog(url);
+
       Response response = await post(
         uri,
         headers: {'Content-type': 'application/json'},
         body: jsonEncode(body),
       );
+
       _postRequestLog(
         url,
         response.statusCode,
         headers: response.headers,
         body: response.body,
       );
+
       if (response.statusCode == 200) {
         final decodedJson = jsonDecode(response.body);
         return NetworkResponse(
@@ -70,10 +76,13 @@ class NetworkClient {
           data: decodedJson,
         );
       } else {
+        final decodedJson = jsonDecode(response.body);
+        String errorMessage = decodedJson['data'] ?? 'Something went wrong';
+
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
-          errorMessage: 'Something went wrong',
+          errorMessage: errorMessage,
         );
       }
     } catch (e) {
@@ -89,7 +98,7 @@ class NetworkClient {
   static void _preRequestLog(String url, {Map<String, dynamic>? body}) {
     _logger.i(
       'URL => $url\n'
-      'Body => $body',
+      'Body => $body\n',
     );
   }
 
@@ -103,15 +112,15 @@ class NetworkClient {
     if (errorMessage == null) {
       _logger.i(
         'URL => $url\n'
-        'Status Code => $statusCode'
+        'Status Code => $statusCode\n'
         'Response => $body\n'
         'Headers => $headers\n',
       );
     } else {
       _logger.e(
         'URL => $url\n'
-        'Status Code => $statusCode'
-        'Error Message => $errorMessage',
+        'Status Code => $statusCode\n'
+        'Error Message => $errorMessage\n',
       );
     }
   }
