@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../controllers/auth_controller.dart';
@@ -22,7 +24,14 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           spacing: 10,
           children: [
-            CircleAvatar(child: Icon(Icons.account_circle, size: 40)),
+            CircleAvatar(
+              backgroundImage:
+                  _shouldShowImage(AuthController.userModel?.photo)
+                      ? MemoryImage(
+                        base64Decode(AuthController.userModel?.photo ?? ''),
+                      )
+                      : null,
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,6 +61,10 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ],
     );
+  }
+
+  bool _shouldShowImage(String? photo) {
+    return photo != null && photo.isNotEmpty;
   }
 
   void _onTapProfileSection(context) {
