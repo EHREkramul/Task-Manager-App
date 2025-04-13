@@ -180,9 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       AuthController.saveUserInformation(loginModel.token!, loginModel.userModel!);
 
-      // TODO: local database setup
-      // TODO: Check Logged in/or not
-
       _clearTEControllers();
       Navigator.pushAndRemoveUntil(
         context,

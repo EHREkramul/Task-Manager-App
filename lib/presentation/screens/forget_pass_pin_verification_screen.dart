@@ -7,7 +7,8 @@ import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';
 
 class ForgetPassPinVerificationScreen extends StatefulWidget {
-  const ForgetPassPinVerificationScreen({super.key});
+  const ForgetPassPinVerificationScreen({super.key, required this.email});
+  final String email;
 
   @override
   State<ForgetPassPinVerificationScreen> createState() =>

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/controllers/auth_controller.dart';
 
+import '../controllers/auth_controller.dart';
 import '../screens/login_screen.dart';
 import '../screens/update_profile_screen.dart';
 
@@ -28,13 +28,13 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ekramul Haque',
+                    AuthController.userModel?.fullName ?? '',
                     style: TextTheme.of(
                       context,
                     ).bodyLarge?.copyWith(color: Colors.white),
                   ),
                   Text(
-                    'ehr.ekramul@gmail.com',
+                    AuthController.userModel!.email!,
                     style: TextTheme.of(
                       context,
                     ).bodySmall?.copyWith(color: Colors.white),

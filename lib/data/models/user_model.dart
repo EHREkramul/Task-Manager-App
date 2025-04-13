@@ -15,6 +15,10 @@ class UserModel {
     this.createdDate,
   });
 
+  String get fullName{
+    return '$firstName $lastName';
+  }
+
   UserModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     email = json['email'];
