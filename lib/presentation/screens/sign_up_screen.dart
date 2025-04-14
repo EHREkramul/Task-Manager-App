@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/data/service/network_client.dart';
-import 'package:taskmanager/data/service/network_response.dart';
-import 'package:taskmanager/data/utils/urls.dart';
-import 'package:taskmanager/presentation/utils/snack_bar_message.dart';
 
+import '../../app/app.dart';
+import '../../data/service/network_client.dart';
+import '../../data/service/network_response.dart';
+import '../../data/utils/urls.dart';
+import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'login_screen.dart';
 import '../widgets/screen_background.dart';
@@ -168,7 +169,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _registerUser();
     }
   }
-  void _clearTEControllers(){
+
+  void _clearTEControllers() {
     _emailTEController.clear();
     _firstNameTEController.clear();
     _lastNameTEController.clear();
@@ -195,15 +197,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _registrationInProgress = false;
     });
     if (response.isSuccess) {
-      showSnackBarMessage(context, 'User Registered Successfully');
+      showSnackBarMessage('User Registered Successfully');
       _clearTEControllers();
       Navigator.pushAndRemoveUntil(
-        context,
+        TaskManagerApp.navigatorKey.currentContext!,
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
     } else {
-      showSnackBarMessage(context, response.errorMessage!, true);
+      showSnackBarMessage(response.errorMessage!, true);
     }
   }
 

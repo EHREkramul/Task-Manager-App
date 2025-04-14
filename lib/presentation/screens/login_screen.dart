@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/app.dart';
 import '../../data/models/login_model.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
@@ -155,7 +156,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _loginUser();
     }
   }
-  void _clearTEControllers(){
+
+  void _clearTEControllers() {
     _emailTEController.clear();
     _passwordTEController.clear();
   }
@@ -178,16 +180,19 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.isSuccess) {
       LoginModel loginModel = LoginModel.fromJson(response.data!);
 
-      AuthController.saveUserInformation(loginModel.token!, loginModel.userModel!);
+      AuthController.saveUserLoginInformation(
+        loginModel.token!,
+        loginModel.userModel!,
+      );
 
       _clearTEControllers();
       Navigator.pushAndRemoveUntil(
-        context,
+        TaskManagerApp.navigatorKey.currentContext!,
         MaterialPageRoute(builder: (context) => HomeScreen()),
         (route) => false,
       );
     } else {
-      showSnackBarMessage(context, response.errorMessage!, true);
+      showSnackBarMessage(response.errorMessage!, true);
     }
   }
 

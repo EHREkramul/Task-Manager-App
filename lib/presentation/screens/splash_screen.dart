@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:taskmanager/presentation/controllers/auth_controller.dart';
-import 'package:taskmanager/presentation/screens/home_screen.dart';
 
+import '../../app/app.dart';
+import '../controllers/auth_controller.dart';
+import 'home_screen.dart';
 import 'login_screen.dart';
 import '../utils/assets_paths.dart';
 
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLoggedIn = await AuthController.checkIfUserLoggedIn();
 
     Navigator.pushReplacement(
-      context,
+      TaskManagerApp.navigatorKey.currentContext!,
       MaterialPageRoute(
         builder: (context) => isLoggedIn ? HomeScreen() : LoginScreen(),
       ),

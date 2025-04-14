@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'package:taskmanager/app/app.dart';
-import 'package:taskmanager/presentation/controllers/auth_controller.dart';
-import 'package:taskmanager/presentation/screens/login_screen.dart';
 
+import '../../app/app.dart';
+import '../../presentation/controllers/auth_controller.dart';
+import '../../presentation/screens/login_screen.dart';
 import 'network_response.dart';
 
 class NetworkClient {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-void showSnackBarMessage(
-  BuildContext context,
-  String message, [
-  bool isError = false,
-]) {
-  ScaffoldMessenger.of(context).showSnackBar(
+import '../../app/app.dart';
+
+
+void showSnackBarMessage(String message, [bool isError = false]) {
+  ScaffoldMessenger.of(
+    TaskManagerApp.navigatorKey.currentContext!,
+  ).showSnackBar(
     SnackBar(
       content: Text(message),
       backgroundColor: isError ? Colors.redAccent : Colors.green,

@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:taskmanager/data/models/user_model.dart';
-import 'package:taskmanager/presentation/controllers/auth_controller.dart';
-import 'package:taskmanager/presentation/widgets/centered_circular_progress_bar.dart';
 
+import '../../data/models/profile_details_model.dart';
+import '../../data/models/user_model.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
+import '../controllers/auth_controller.dart';
 import '../utils/snack_bar_message.dart';
+import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/tm_app_bar.dart';
 
@@ -31,7 +32,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-   bool _updateProfileInProgress = false;
+  bool _updateProfileInProgress = false;
 
   @override
   void initState() {
@@ -211,10 +212,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       "lastName": _lastNameTEController.text.trim(),
       "mobile": _mobileTEController.text.trim(),
     };
-    if(_passwordTEController.text.isNotEmpty){
-      requestBody ['password'] = _passwordTEController.text;
+    if (_passwordTEController.text.isNotEmpty) {
+      requestBody['password'] = _passwordTEController.text;
     }
-    if(_pickedImage != null){
+    if (_pickedImage != null) {
       List<int> imageBytes = await _pickedImage!.readAsBytes();
       String encodedImage = base64Encode(imageBytes);
       requestBody['photo'] = encodedImage;
@@ -227,11 +228,28 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       _updateProfileInProgress = false;
     });
     if (response.isSuccess) {
-      // TODO: Update app bar and profile text fields.
+      await _getProfileDetails();
       _passwordTEController.clear();
-      showSnackBarMessage(context, 'User Info Updated Successfully');
+      setState(() {});
+      showSnackBarMessage('User Info Updated Successfully');
     } else {
-      showSnackBarMessage(context, response.errorMessage!, true);
+      showSnackBarMessage(response.errorMessage!, true);
+    }
+  }
+
+  Future<void> _getProfileDetails() async {
+    NetworkResponse response = await NetworkClient.getRequest(
+      url: Urls.profileDetailsUrl,
+    );
+    if (response.isSuccess) {
+      ProfileDetailsModel profileDetailsModel = ProfileDetailsModel.fromJson(
+        response.data!,
+      );
+      UserModel userModel = profileDetailsModel.userModelList!.first;
+
+      AuthController.saveUserInformation(userModel);
+    } else {
+      showSnackBarMessage(response.errorMessage!, true);
     }
   }
 
