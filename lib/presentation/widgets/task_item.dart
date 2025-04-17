@@ -8,9 +8,15 @@ import '../../data/utils/urls.dart';
 import '../utils/snack_bar_message.dart';
 
 class TaskItem extends StatefulWidget {
-  const TaskItem({super.key, required this.task, required this.statusColor});
+  const TaskItem({
+    super.key,
+    required this.task,
+    required this.statusColor,
+    required this.updateData,
+  });
   final TaskModel task;
   final Color statusColor;
+  final VoidCallback updateData;
 
   @override
   State<TaskItem> createState() => _TaskItemState();
@@ -89,6 +95,7 @@ class _TaskItemState extends State<TaskItem> {
     );
 
     if (response.isSuccess) {
+      widget.updateData();
       showSnackBarMessage('Task Deleted Successfully');
     } else {
       showSnackBarMessage(response.errorMessage!, true);

@@ -74,6 +74,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                               (context, index) => TaskItem(
                                 statusColor: Colors.blue,
                                 task: _taskList[index],
+                                updateData: updateData,
                               ),
                         ),
               ),
@@ -82,6 +83,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         ),
       ),
     );
+  }
+
+  void updateData() {
+    setState(() {
+      _getTaskStatusCount();
+      _getAllNewTaskList();
+    });
   }
 
   Widget _buildSummarySection() {
