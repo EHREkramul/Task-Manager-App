@@ -7,4 +7,11 @@ class Urls {
   static const String profileDetailsUrl = '$_baseUrl/ProfileDetails';
   static const String addNewTaskUrl = '$_baseUrl/createTask';
   static const String taskStatusCountUrl = '$_baseUrl/taskStatusCount';
+
+  static const String newTaskUrl = '$_baseUrl/listTaskByStatus/New';
+  static const String completedTaskUrl = '$_baseUrl/listTaskByStatus/Completed';
+  static const String canceledTaskUrl = '$_baseUrl/listTaskByStatus/Canceled';
+  static const String progressTaskUrl = '$_baseUrl/listTaskByStatus/Progress';
+
+  static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';
 }

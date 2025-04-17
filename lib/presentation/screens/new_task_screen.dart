@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'no_task_screen.dart';
+import '../../data/models/task_list_model.dart';
+import '../../data/models/task_model.dart';
 import '../../data/models/task_status_count_list_model.dart';
 import '../../data/models/task_status_count_model.dart';
 import '../../data/service/network_client.dart';
@@ -26,9 +29,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   TaskStatusCountModel progressTask = TaskStatusCountModel(count: 0);
   TaskStatusCountModel canceledTask = TaskStatusCountModel(count: 0);
 
+  bool _getNewTaskInProgress = false;
+  List<TaskModel> _taskList = <TaskModel>[];
+
   @override
   void initState() {
     _getTaskStatusCount();
+    _getAllNewTaskList();
     super.initState();
   }
 
@@ -48,7 +55,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         child: Icon(Icons.add, size: 30),
       ),
       body: Visibility(
-        visible: _statusCountInProgress == false,
+        visible:
+            _statusCountInProgress == false && _getNewTaskInProgress == false,
         replacement: CenteredCircularProgressBar(),
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -57,19 +65,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             children: [
               _buildSummarySection(),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder:
-                      (context, index) => TaskItem(
-                        index: index,
-                        status: 'New',
-                        title: 'Lorem Ipsum is simply dummy',
-                        date: DateTime.now(),
-                        statusColor: Colors.blue,
-                        description:
-                            'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
-                      ),
-                ),
+                child:
+                    _taskList.isEmpty
+                        ? NoTasksScreen(category: 'New')
+                        : ListView.builder(
+                          itemCount: _taskList.length,
+                          itemBuilder:
+                              (context, index) => TaskItem(
+                                statusColor: Colors.blue,
+                                task: _taskList[index],
+                              ),
+                        ),
               ),
             ],
           ),
@@ -81,10 +87,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget _buildSummarySection() {
     return Row(
       children: [
-        SummaryCard(count: canceledTask.count.toString(), status: 'Canceled'),
-        SummaryCard(count: completedTask.count.toString(), status: 'Completed'),
-        SummaryCard(count: progressTask.count.toString(), status: 'Progress'),
         SummaryCard(count: newTask.count.toString(), status: 'New Task'),
+        SummaryCard(count: completedTask.count.toString(), status: 'Completed'),
+        SummaryCard(count: canceledTask.count.toString(), status: 'Canceled'),
+        SummaryCard(count: progressTask.count.toString(), status: 'Progress'),
       ],
     );
   }
@@ -120,6 +126,26 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
     setState(() {
       _statusCountInProgress = false;
+    });
+  }
+
+  Future<void> _getAllNewTaskList() async {
+    setState(() {
+      _getNewTaskInProgress = true;
+    });
+    NetworkResponse response = await NetworkClient.getRequest(
+      url: Urls.newTaskUrl,
+    );
+
+    if (response.isSuccess) {
+      TaskListModel taskListModel = TaskListModel.fromJson(response.data!);
+      _taskList = taskListModel.taskList!;
+    } else {
+      showSnackBarMessage(response.errorMessage!, true);
+    }
+
+    setState(() {
+      _getNewTaskInProgress = false;
     });
   }
 }
