@@ -66,7 +66,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                     ),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
-                      if (value?.isEmpty ?? false) {
+                      if (value?.trim().isEmpty ?? false) {
                         return 'Description can\'t be empty';
                       }
                       return null;
@@ -109,6 +109,10 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       "description": _descriptionTEController.text,
       "status": "New",
     };
+
+    setState(() {
+      _addNewTaskInProgress = true;
+    });
 
     final NetworkResponse response = await NetworkClient.postRequest(
       url: Urls.addNewTaskUrl,
