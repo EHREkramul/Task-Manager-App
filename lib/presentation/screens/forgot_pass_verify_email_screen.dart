@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/app/app.dart';
+import 'package:taskmanager/data/service/network_client.dart';
+import 'package:taskmanager/data/service/network_response.dart';
+import 'package:taskmanager/data/utils/urls.dart';
+import 'package:taskmanager/presentation/utils/snack_bar_message.dart';
+import 'package:taskmanager/presentation/widgets/centered_circular_progress_bar.dart';
 
 import 'forget_pass_pin_verification_screen.dart';
 import '../widgets/screen_background.dart';
@@ -17,6 +23,8 @@ class _ForgotPassVerifyEmailScreenState
   final TextEditingController _emailTEController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool _verifyEmailInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +66,16 @@ class _ForgotPassVerifyEmailScreenState
                   },
                 ),
                 SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: _onTapSubmitButton,
-                  child: Icon(
-                    Icons.arrow_circle_right_outlined,
-                    color: Colors.white,
-                    size: 21.12,
+                Visibility(
+                  visible: _verifyEmailInProgress == false,
+                  replacement: CenteredCircularProgressBar(),
+                  child: ElevatedButton(
+                    onPressed: _onTapSubmitButton,
+                    child: Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: Colors.white,
+                      size: 21.12,
+                    ),
                   ),
                 ),
                 SizedBox(height: 35),
@@ -82,8 +94,22 @@ class _ForgotPassVerifyEmailScreenState
 
   void _onTapSubmitButton() {
     if (_formKey.currentState!.validate()) {
+      _verifyEmail();
+    }
+  }
+
+  Future<void> _verifyEmail() async {
+    setState(() {
+      _verifyEmailInProgress = true;
+    });
+
+    NetworkResponse response = await NetworkClient.getRequest(
+      url: Urls.verifyEmailUrl(_emailTEController.text),
+    );
+
+    if (response.isSuccess) {
       Navigator.push(
-        context,
+        TaskManagerApp.navigatorKey.currentContext!,
         MaterialPageRoute(
           builder:
               (context) => ForgetPassPinVerificationScreen(
@@ -91,7 +117,13 @@ class _ForgotPassVerifyEmailScreenState
               ),
         ),
       );
+    }else{
+      showSnackBarMessage(response.errorMessage!, true);
     }
+
+    setState(() {
+      _verifyEmailInProgress = false;
+    });
   }
 
   @override

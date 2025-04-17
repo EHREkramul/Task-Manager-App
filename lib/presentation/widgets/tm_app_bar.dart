@@ -2,24 +2,33 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../app/app.dart';
 import '../controllers/auth_controller.dart';
 import '../screens/login_screen.dart';
 import '../screens/update_profile_screen.dart';
 
-class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
+class TMAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TMAppBar({super.key, this.fromProfileScreen});
-
   final bool? fromProfileScreen;
 
   @override
+  State<TMAppBar> createState() => _TMAppBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _TMAppBarState extends State<TMAppBar> {
+  @override
   Widget build(BuildContext context) {
+    final bool? fromProfileScreen = widget.fromProfileScreen;
     return AppBar(
       title: GestureDetector(
         onTap: () {
           if (fromProfileScreen ?? false) {
             return;
           }
-          _onTapProfileSection(context);
+          _onTapProfileSection();
         },
         child: Row(
           spacing: 10,
@@ -56,33 +65,36 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () => _onTapLogoutButton(context),
+          onPressed: () => _onTapLogoutButton(),
           icon: Icon(Icons.logout),
         ),
       ],
     );
   }
 
+  void updateData() {
+    setState(() {});
+  }
+
   bool _shouldShowImage(String? photo) {
     return photo != null && photo.isNotEmpty;
   }
 
-  void _onTapProfileSection(context) {
+  void _onTapProfileSection() {
     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+      TaskManagerApp.navigatorKey.currentContext!,
+      MaterialPageRoute(
+        builder: (context) => UpdateProfileScreen(updateData: updateData),
+      ),
     );
   }
 
-  Future<void> _onTapLogoutButton(context) async {
+  Future<void> _onTapLogoutButton() async {
     await AuthController.clearUserData();
     Navigator.pushAndRemoveUntil(
-      context,
+      TaskManagerApp.navigatorKey.currentContext!,
       MaterialPageRoute(builder: (context) => LoginScreen()),
       (route) => false,
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

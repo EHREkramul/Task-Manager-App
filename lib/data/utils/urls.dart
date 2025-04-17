@@ -14,4 +14,7 @@ class Urls {
   static const String progressTaskUrl = '$_baseUrl/listTaskByStatus/Progress';
 
   static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';
+  static String verifyEmailUrl(String email) => '$_baseUrl/RecoverVerifyEmail/$email';
+  static String verifyOtpUrl(String email, String pin) => '$_baseUrl/RecoverVerifyOtp/$email/$pin';
+  static const String resetPasswordUrl = '$_baseUrl/RecoverResetPassword';
 }
