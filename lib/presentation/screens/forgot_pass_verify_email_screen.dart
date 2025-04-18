@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/app/app.dart';
-import 'package:taskmanager/data/service/network_client.dart';
-import 'package:taskmanager/data/service/network_response.dart';
-import 'package:taskmanager/data/utils/urls.dart';
-import 'package:taskmanager/presentation/utils/snack_bar_message.dart';
-import 'package:taskmanager/presentation/widgets/centered_circular_progress_bar.dart';
 
+import '../../app/app.dart';
+import '../../data/service/network_client.dart';
+import '../../data/service/network_response.dart';
+import '../../data/utils/urls.dart';
+import '../utils/snack_bar_message.dart';
+import '../widgets/centered_circular_progress_bar.dart';
 import 'forget_pass_pin_verification_screen.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/bottom_texts.dart';

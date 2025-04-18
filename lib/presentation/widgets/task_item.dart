@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:taskmanager/app/app.dart';
-import 'package:taskmanager/presentation/widgets/centered_circular_progress_bar.dart';
 
+import '../../app/app.dart';
 import '../../data/models/task_model.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
 import '../utils/snack_bar_message.dart';
+import 'centered_circular_progress_bar.dart';
 
 class TaskItem extends StatefulWidget {
   const TaskItem({
