@@ -44,18 +44,12 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
                         (context, index) => TaskItem(
                           statusColor: Colors.green,
                           task: _taskList[index],
-                          updateData: updateData,
+                          updateData: _getAllCompletedTaskList,
                         ),
                   ),
         ),
       ),
     );
-  }
-
-  void updateData() {
-    setState(() {
-      _getAllCompletedTaskList();
-    });
   }
 
   Future<void> _getAllCompletedTaskList() async {

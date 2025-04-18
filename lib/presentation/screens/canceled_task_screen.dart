@@ -44,18 +44,12 @@ class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
                         (context, index) => TaskItem(
                           statusColor: Colors.redAccent,
                           task: _taskList[index],
-                          updateData: updateData,
+                          updateData: _getAllCanceledTaskList,
                         ),
                   ),
         ),
       ),
     );
-  }
-
-  void updateData() {
-    setState(() {
-      _getAllCanceledTaskList();
-    });
   }
 
   Future<void> _getAllCanceledTaskList() async {

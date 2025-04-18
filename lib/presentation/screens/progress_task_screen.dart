@@ -44,18 +44,12 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
                         (context, index) => TaskItem(
                           statusColor: Colors.purple,
                           task: _taskList[index],
-                          updateData: updateData,
+                          updateData: _getAllProgressTaskList,
                         ),
                   ),
         ),
       ),
     );
-  }
-
-  void updateData() {
-    setState(() {
-      _getAllProgressTaskList();
-    });
   }
 
   Future<void> _getAllProgressTaskList() async {

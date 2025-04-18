@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taskmanager/app/app.dart';
 
 import '../../data/models/task_model.dart';
 import '../../data/service/network_client.dart';
@@ -23,6 +24,8 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
+  bool _statusUpdateInProgress = false;
+
   @override
   Widget build(BuildContext context) {
     final TaskModel task = widget.task;
@@ -63,7 +66,7 @@ class _TaskItemState extends State<TaskItem> {
                 ),
                 Spacer(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: _showUpdateStatusDialogue,
                   style: IconButton.styleFrom(
                     padding: EdgeInsets.zero,
                     minimumSize: Size(0, 0),
@@ -98,6 +101,91 @@ class _TaskItemState extends State<TaskItem> {
       widget.updateData();
       showSnackBarMessage('Task Deleted Successfully');
     } else {
+      showSnackBarMessage(response.errorMessage!, true);
+    }
+  }
+
+  void _showUpdateStatusDialogue() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Update Status'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('New'),
+                trailing: isSelected('New'),
+                onTap: () {
+                  if (widget.task.status == 'New') {
+                    Navigator.pop(context);
+                  } else {
+                    _changeTaskStatus('New');
+                  }
+                },
+              ),
+
+              ListTile(
+                title: Text('Completed'),
+                trailing: isSelected('Completed'),
+                onTap: () {
+                  if (widget.task.status == 'Completed') {
+                    Navigator.pop(context);
+                  } else {
+                    _changeTaskStatus('Completed');
+                  }
+                },
+              ),
+              ListTile(
+                title: Text('Canceled'),
+                trailing: isSelected('Canceled'),
+                onTap: () {
+                  if (widget.task.status == 'Canceled') {
+                    Navigator.pop(context);
+                  } else {
+                    _changeTaskStatus('Canceled');
+                  }
+                },
+              ),
+              ListTile(
+                title: Text('Progress'),
+                trailing: isSelected('Progress'),
+                onTap: () {
+                  if (widget.task.status == 'Progress') {
+                    Navigator.pop(context);
+                  } else {
+                    _changeTaskStatus('Progress');
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget? isSelected(String status) {
+    return widget.task.status == status ? Icon(Icons.done) : null;
+  }
+
+  Future<void> _changeTaskStatus(String newStatus) async {
+    setState(() {
+      _statusUpdateInProgress = true;
+    });
+
+    final NetworkResponse response = await NetworkClient.getRequest(
+      url: Urls.updateTaskStatusUrl(widget.task.sId!, newStatus),
+    );
+    Navigator.pop(TaskManagerApp.navigatorKey.currentContext!);
+    if (response.isSuccess) {
+      widget.updateData();
+      showSnackBarMessage('Task marked as $newStatus');
+    } else {
+      setState(() {
+        _statusUpdateInProgress = false;
+      });
       showSnackBarMessage(response.errorMessage!, true);
     }
   }

@@ -86,10 +86,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   void updateData() {
-    setState(() {
-      _getTaskStatusCount();
       _getAllNewTaskList();
-    });
+      _getTaskStatusCount();
   }
 
   Widget _buildSummarySection() {
