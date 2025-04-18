@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taskmanager/app/app.dart';
+import 'package:taskmanager/presentation/widgets/centered_circular_progress_bar.dart';
 
 import '../../data/models/task_model.dart';
 import '../../data/service/network_client.dart';
@@ -25,6 +26,7 @@ class TaskItem extends StatefulWidget {
 
 class _TaskItemState extends State<TaskItem> {
   bool _statusUpdateInProgress = false;
+  bool _deleteTaskInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,24 +67,34 @@ class _TaskItemState extends State<TaskItem> {
                   padding: EdgeInsets.symmetric(horizontal: 8),
                 ),
                 Spacer(),
-                IconButton(
-                  onPressed: _showUpdateStatusDialogue,
-                  style: IconButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                Visibility(
+                  visible:
+                      _deleteTaskInProgress == false &&
+                      _statusUpdateInProgress == false,
+                  replacement: CenteredCircularProgressBar(),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: _showUpdateStatusDialogue,
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        icon: Icon(Icons.edit_note, color: Colors.green),
+                      ),
+                      SizedBox(width: 8),
+                      IconButton(
+                        onPressed: () => _deleteTask(task.sId ?? ''),
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        icon: Icon(Icons.delete, color: Colors.redAccent),
+                      ),
+                    ],
                   ),
-                  icon: Icon(Icons.edit_note, color: Colors.green),
-                ),
-                SizedBox(width: 8),
-                IconButton(
-                  onPressed: () => _deleteTask(task.sId ?? ''),
-                  style: IconButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  icon: Icon(Icons.delete, color: Colors.redAccent),
                 ),
               ],
             ),
@@ -93,6 +105,9 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _deleteTask(String taskId) async {
+    setState(() {
+      _deleteTaskInProgress = true;
+    });
     NetworkResponse response = await NetworkClient.getRequest(
       url: Urls.deleteTaskUrl(taskId),
     );
@@ -103,6 +118,9 @@ class _TaskItemState extends State<TaskItem> {
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }
+    setState(() {
+      _deleteTaskInProgress = false;
+    });
   }
 
   void _showUpdateStatusDialogue() {
@@ -171,6 +189,7 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _changeTaskStatus(String newStatus) async {
+    Navigator.pop(TaskManagerApp.navigatorKey.currentContext!);
     setState(() {
       _statusUpdateInProgress = true;
     });
@@ -178,7 +197,7 @@ class _TaskItemState extends State<TaskItem> {
     final NetworkResponse response = await NetworkClient.getRequest(
       url: Urls.updateTaskStatusUrl(widget.task.sId!, newStatus),
     );
-    Navigator.pop(TaskManagerApp.navigatorKey.currentContext!);
+
     if (response.isSuccess) {
       widget.updateData();
       showSnackBarMessage('Task marked as $newStatus');

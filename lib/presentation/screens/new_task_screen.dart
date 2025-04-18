@@ -24,10 +24,19 @@ class NewTaskScreen extends StatefulWidget {
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _statusCountInProgress = false;
 
-  TaskStatusCountModel newTask = TaskStatusCountModel(count: 0);
-  TaskStatusCountModel completedTask = TaskStatusCountModel(count: 0);
-  TaskStatusCountModel progressTask = TaskStatusCountModel(count: 0);
-  TaskStatusCountModel canceledTask = TaskStatusCountModel(count: 0);
+  TaskStatusCountModel newTask = TaskStatusCountModel(status: 'New', count: 0);
+  TaskStatusCountModel completedTask = TaskStatusCountModel(
+    status: 'Completed',
+    count: 0,
+  );
+  TaskStatusCountModel progressTask = TaskStatusCountModel(
+    status: 'Progress',
+    count: 0,
+  );
+  TaskStatusCountModel canceledTask = TaskStatusCountModel(
+    status: 'Canceled',
+    count: 0,
+  );
 
   bool _getNewTaskInProgress = false;
   List<TaskModel> _taskList = <TaskModel>[];
@@ -74,7 +83,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                               (context, index) => TaskItem(
                                 statusColor: Colors.blue,
                                 task: _taskList[index],
-                                updateData: updateData,
+                                updateData: () {
+                                  _getAllNewTaskList();
+                                  _getTaskStatusCount();
+                                },
                               ),
                         ),
               ),
@@ -83,11 +95,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         ),
       ),
     );
-  }
-
-  void updateData() {
-      _getAllNewTaskList();
-      _getTaskStatusCount();
   }
 
   Widget _buildSummarySection() {
@@ -115,17 +122,22 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       List<TaskStatusCountModel> taskStatusCountList =
           taskStatusCountListModel.statusCountList!;
 
-      for (var task in taskStatusCountList) {
-        if (task.status == 'New') {
-          newTask = task;
-        } else if (task.status == 'Completed') {
-          completedTask = task;
-        } else if (task.status == 'Canceled') {
-          canceledTask = task;
-        } else {
-          progressTask = task;
-        }
-      }
+      newTask = taskStatusCountList.firstWhere(
+        (task) => task.status == 'New',
+        orElse: () => TaskStatusCountModel(status: 'New', count: 0),
+      );
+      completedTask = taskStatusCountList.firstWhere(
+        (task) => task.status == 'Completed',
+        orElse: () => TaskStatusCountModel(status: 'Completed', count: 0),
+      );
+      canceledTask = taskStatusCountList.firstWhere(
+        (task) => task.status == 'Canceled',
+        orElse: () => TaskStatusCountModel(status: 'Canceled', count: 0),
+      );
+      progressTask = taskStatusCountList.firstWhere(
+        (task) => task.status == 'Progress',
+        orElse: () => TaskStatusCountModel(status: 'Progress', count: 0),
+      );
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }

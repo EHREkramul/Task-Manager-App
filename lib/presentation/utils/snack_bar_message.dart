@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app/app.dart';
 
-
 void showSnackBarMessage(String message, [bool isError = false]) {
   ScaffoldMessenger.of(
     TaskManagerApp.navigatorKey.currentContext!,
@@ -10,6 +9,7 @@ void showSnackBarMessage(String message, [bool isError = false]) {
     SnackBar(
       content: Text(message),
       backgroundColor: isError ? Colors.redAccent : Colors.green,
+      duration: Duration(milliseconds: 500),
     ),
   );
 }
