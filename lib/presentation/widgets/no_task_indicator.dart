@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NoTasksScreen extends StatelessWidget {
-  final String category;
 
-  const NoTasksScreen({super.key, required this.category});
+  const NoTasksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class NoTasksScreen extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'No $category tasks available',
+            'No tasks available',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey[600], // Soft gray color for the text

@@ -9,7 +9,7 @@ void showSnackBarMessage(String message, [bool isError = false]) {
     SnackBar(
       content: Text(message),
       backgroundColor: isError ? Colors.redAccent : Colors.green,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(seconds: 1),
     ),
   );
 }

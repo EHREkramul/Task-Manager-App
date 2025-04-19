@@ -55,7 +55,7 @@ class TaskManagerApp extends StatelessWidget {
           ),
         ),
       ),
-      title: 'Task Manager',
+      title: 'ST Manager',
       home: SplashScreen(),
     );
   }

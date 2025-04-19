@@ -8,7 +8,7 @@ import '../../data/utils/urls.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/task_item.dart';
-import 'no_task_screen.dart';
+import '../widgets/no_task_indicator.dart';
 
 class CanceledTaskScreen extends StatefulWidget {
   const CanceledTaskScreen({super.key});
@@ -37,7 +37,7 @@ class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
           replacement: CenteredCircularProgressBar(),
           child:
               _taskList.isEmpty
-                  ? NoTasksScreen(category: 'NewTask')
+                  ? NoTasksScreen()
                   : ListView.builder(
                     itemCount: _taskList.length,
                     itemBuilder:

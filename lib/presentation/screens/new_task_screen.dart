@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'no_task_screen.dart';
+import '../widgets/no_task_indicator.dart';
 import '../../data/models/task_list_model.dart';
 import '../../data/models/task_model.dart';
 import '../../data/models/task_status_count_list_model.dart';
@@ -76,7 +76,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               Expanded(
                 child:
                     _taskList.isEmpty
-                        ? NoTasksScreen(category: 'New')
+                        ? NoTasksScreen()
                         : ListView.builder(
                           itemCount: _taskList.length,
                           itemBuilder:

@@ -140,13 +140,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onTapForgotPasswordButton() => Navigator.push(
-    context,
+    TaskManagerApp.navigatorKey.currentContext!,
     MaterialPageRoute(builder: (context) => ForgotPassVerifyEmailScreen()),
   );
 
   void _onTapSignUpButton() {
     Navigator.push(
-      context,
+      TaskManagerApp.navigatorKey.currentContext!,
       MaterialPageRoute(builder: (context) => SignUpScreen()),
     );
   }

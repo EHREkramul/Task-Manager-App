@@ -146,7 +146,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
 
   void _onTapSignInButton() {
     Navigator.pushAndRemoveUntil(
-      context,
+      TaskManagerApp.navigatorKey.currentContext!,
       MaterialPageRoute(builder: (context) => LoginScreen()),
       (route) => false,
     );
