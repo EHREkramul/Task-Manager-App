@@ -11,6 +11,7 @@ class TaskManagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: TaskManagerApp.navigatorKey,
       theme: ThemeData(
         primaryColor: Colors.green,
