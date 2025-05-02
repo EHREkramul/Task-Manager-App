@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../app/app.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
@@ -123,11 +123,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       _subjectTEController.clear();
       _descriptionTEController.clear();
       showSnackBarMessage('New task added');
-      Navigator.pushAndRemoveUntil(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        (route) => false,
-      );
+      Get.offAll(HomeScreen());
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../app/app.dart';
 import '../../data/models/task_model.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
@@ -137,7 +137,7 @@ class _TaskItemState extends State<TaskItem> {
                 trailing: isSelected('New'),
                 onTap: () {
                   if (widget.task.status == 'New') {
-                    Navigator.pop(context);
+                    Get.back();
                   } else {
                     _changeTaskStatus('New');
                   }
@@ -149,7 +149,7 @@ class _TaskItemState extends State<TaskItem> {
                 trailing: isSelected('Completed'),
                 onTap: () {
                   if (widget.task.status == 'Completed') {
-                    Navigator.pop(context);
+                    Get.back();
                   } else {
                     _changeTaskStatus('Completed');
                   }
@@ -160,7 +160,7 @@ class _TaskItemState extends State<TaskItem> {
                 trailing: isSelected('Canceled'),
                 onTap: () {
                   if (widget.task.status == 'Canceled') {
-                    Navigator.pop(context);
+                    Get.back();
                   } else {
                     _changeTaskStatus('Canceled');
                   }
@@ -171,7 +171,7 @@ class _TaskItemState extends State<TaskItem> {
                 trailing: isSelected('Progress'),
                 onTap: () {
                   if (widget.task.status == 'Progress') {
-                    Navigator.pop(context);
+                    Get.back();
                   } else {
                     _changeTaskStatus('Progress');
                   }
@@ -189,7 +189,7 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _changeTaskStatus(String newStatus) async {
-    Navigator.pop(TaskManagerApp.navigatorKey.currentContext!);
+    Get.back();
     setState(() {
       _statusUpdateInProgress = true;
     });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../widgets/no_task_indicator.dart';
 import '../../data/models/task_list_model.dart';
@@ -53,10 +54,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddNewTaskScreen()),
-          );
+          Get.to(AddNewTaskScreen());
         },
         backgroundColor: Color.fromARGB(255, 33, 191, 115),
         foregroundColor: Colors.white,

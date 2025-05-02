@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../app/app.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
@@ -130,11 +130,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     if (response.isSuccess) {
       showSnackBarMessage('Password reset successfully');
 
-      Navigator.pushAndRemoveUntil(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false,
-      );
+      Get.offAll(LoginScreen());
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }
@@ -145,11 +141,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   }
 
   void _onTapSignInButton() {
-    Navigator.pushAndRemoveUntil(
-      TaskManagerApp.navigatorKey.currentContext!,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (route) => false,
-    );
+    Get.offAll(LoginScreen());
   }
 
   @override

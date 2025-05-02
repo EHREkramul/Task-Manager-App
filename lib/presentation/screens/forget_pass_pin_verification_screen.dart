@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../app/app.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
@@ -108,11 +108,7 @@ class _ForgetPassPinVerificationScreenState
   }
 
   void _onTapSignInButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (route) => false,
-    );
+    Get.offAll(LoginScreen());
   }
 
   void _onTapVerifyButton() {
@@ -133,15 +129,8 @@ class _ForgetPassPinVerificationScreenState
     );
 
     if (response.isSuccess) {
-      Navigator.push(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(
-          builder:
-              (context) => SetPasswordScreen(
-                email: widget.email,
-                otp: _pinCodeTEController.text,
-              ),
-        ),
+      Get.to(
+        SetPasswordScreen(email: widget.email, otp: _pinCodeTEController.text),
       );
     } else {
       showSnackBarMessage(response.errorMessage!, true);

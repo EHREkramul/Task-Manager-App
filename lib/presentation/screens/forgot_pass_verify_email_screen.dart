@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../app/app.dart';
 import '../../data/service/network_client.dart';
 import '../../data/service/network_response.dart';
 import '../../data/utils/urls.dart';
@@ -82,7 +82,7 @@ class _ForgotPassVerifyEmailScreenState
                 BottomTexts(
                   directionText: 'Have account?',
                   buttonText: 'Sign in',
-                  onClick: () => Navigator.pop(context),
+                  onClick: () => Get.back(),
                 ),
               ],
             ),
@@ -108,16 +108,8 @@ class _ForgotPassVerifyEmailScreenState
     );
 
     if (response.isSuccess) {
-      Navigator.push(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(
-          builder:
-              (context) => ForgetPassPinVerificationScreen(
-                email: _emailTEController.text,
-              ),
-        ),
-      );
-    }else{
+      Get.to(ForgetPassPinVerificationScreen(email: _emailTEController.text));
+    } else {
       showSnackBarMessage(response.errorMessage!, true);
     }
 

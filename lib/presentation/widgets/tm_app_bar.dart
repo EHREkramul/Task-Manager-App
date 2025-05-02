@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app/app.dart';
 import '../controllers/auth_controller.dart';
@@ -81,20 +82,11 @@ class _TMAppBarState extends State<TMAppBar> {
   }
 
   void _onTapProfileSection() {
-    Navigator.push(
-      TaskManagerApp.navigatorKey.currentContext!,
-      MaterialPageRoute(
-        builder: (context) => UpdateProfileScreen(updateData: updateData),
-      ),
-    );
+    Get.to(UpdateProfileScreen(updateData: updateData));
   }
 
   Future<void> _onTapLogoutButton() async {
     await AuthController.clearUserData();
-    Navigator.pushAndRemoveUntil(
-      TaskManagerApp.navigatorKey.currentContext!,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (route) => false,
-    );
+    Get.offAll(LoginScreen());
   }
 }

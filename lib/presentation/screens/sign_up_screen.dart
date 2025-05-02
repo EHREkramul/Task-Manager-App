@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app/app.dart';
 import '../../data/service/network_client.dart';
@@ -157,11 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onTapSignInButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (route) => route.isCurrent,
-    );
+    Get.offAll(LoginScreen(), predicate: (route) => route.isCurrent);
   }
 
   void _onTapSubmitButton() {
@@ -199,11 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (response.isSuccess) {
       showSnackBarMessage('User Registered Successfully');
       _clearTEControllers();
-      Navigator.pushAndRemoveUntil(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false,
-      );
+      Get.offAll(LoginScreen());
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }
