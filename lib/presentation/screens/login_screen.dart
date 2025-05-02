@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app/app.dart';
-import '../../data/models/login_model.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
-import '../controllers/auth_controller.dart';
+import '../controllers/login_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'forgot_pass_verify_email_screen.dart';
@@ -28,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _passwordObscure = true;
   String _iconName = AssetsPath.openEyePNG;
-  bool _loginInProgress = false;
+  final LoginController _loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +97,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                Visibility(
-                  visible: _loginInProgress == false,
-                  replacement: CenteredCircularProgressBar(),
-                  child: ElevatedButton(
-                    onPressed: _onTapLoginButton,
-                    child: Icon(
-                      Icons.arrow_circle_right_outlined,
-                      color: Colors.white,
-                      size: 21.12,
-                    ),
-                  ),
+                GetBuilder<LoginController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.loginInProgress == false,
+                      replacement: CenteredCircularProgressBar(),
+                      child: ElevatedButton(
+                        onPressed: _onTapLoginButton,
+                        child: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          color: Colors.white,
+                          size: 21.12,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 25),
                 Column(
@@ -163,37 +164,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser() async {
-    setState(() {
-      _loginInProgress = true;
-    });
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: Urls.loginUrl,
-      body: requestBody,
+    final bool isSuccess = await _loginController.loginUser(
+      _emailTEController.text.trim(),
+      _passwordTEController.text,
     );
-    setState(() {
-      _loginInProgress = false;
-    });
-    if (response.isSuccess) {
-      LoginModel loginModel = LoginModel.fromJson(response.data!);
-
-      AuthController.saveUserLoginInformation(
-        loginModel.token!,
-        loginModel.userModel!,
-      );
-
+    if (isSuccess) {
       _clearTEControllers();
-      Navigator.pushAndRemoveUntil(
-        TaskManagerApp.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        (route) => false,
-      );
+      Get.offAll(HomeScreen());
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(_loginController.errorMessage!, true);
     }
   }
-
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import 'controller_binder.dart';
 import '../presentation/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
@@ -10,9 +12,9 @@ class TaskManagerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return GetMaterialApp(
       navigatorKey: TaskManagerApp.navigatorKey,
+      initialBinding: ControllerBinder(),
       theme: ThemeData(
         primaryColor: Colors.green,
         appBarTheme: AppBarTheme(
