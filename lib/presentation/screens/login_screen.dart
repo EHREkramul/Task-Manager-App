@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app/app.dart';
 import '../controllers/login_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
@@ -140,16 +139,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onTapForgotPasswordButton() => Navigator.push(
-    TaskManagerApp.navigatorKey.currentContext!,
-    MaterialPageRoute(builder: (context) => ForgotPassVerifyEmailScreen()),
-  );
+  void _onTapForgotPasswordButton() {
+    Get.to(ForgotPassVerifyEmailScreen());
+  }
 
   void _onTapSignUpButton() {
-    Navigator.push(
-      TaskManagerApp.navigatorKey.currentContext!,
-      MaterialPageRoute(builder: (context) => SignUpScreen()),
-    );
+    Get.to(SignUpScreen());
   }
 
   void _onTapLoginButton() {
