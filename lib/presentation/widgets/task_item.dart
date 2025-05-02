@@ -3,9 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/models/task_model.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/change_task_status_controller.dart';
+import '../controllers/delete_task_controller.dart';
 import '../utils/snack_bar_message.dart';
 import 'centered_circular_progress_bar.dart';
 
@@ -25,9 +24,6 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
-  bool _statusUpdateInProgress = false;
-  bool _deleteTaskInProgress = false;
-
   @override
   Widget build(BuildContext context) {
     final TaskModel task = widget.task;
@@ -67,34 +63,40 @@ class _TaskItemState extends State<TaskItem> {
                   padding: EdgeInsets.symmetric(horizontal: 8),
                 ),
                 Spacer(),
-                Visibility(
-                  visible:
-                      _deleteTaskInProgress == false &&
-                      _statusUpdateInProgress == false,
-                  replacement: CenteredCircularProgressBar(),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: _showUpdateStatusDialogue,
-                        style: IconButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        icon: Icon(Icons.edit_note, color: Colors.green),
+                GetBuilder<DeleteTaskController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible:
+                          controller.deleteTaskInProgress == false &&
+                          Get.find<ChangeTaskStatusController>()
+                                  .statusUpdateInProgress ==
+                              false,
+                      replacement: CenteredCircularProgressBar(),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: _showUpdateStatusDialogue,
+                            style: IconButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            icon: Icon(Icons.edit_note, color: Colors.green),
+                          ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            onPressed: () => _deleteTask(task.sId ?? ''),
+                            style: IconButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            icon: Icon(Icons.delete, color: Colors.redAccent),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 8),
-                      IconButton(
-                        onPressed: () => _deleteTask(task.sId ?? ''),
-                        style: IconButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        icon: Icon(Icons.delete, color: Colors.redAccent),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -105,22 +107,16 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _deleteTask(String taskId) async {
-    setState(() {
-      _deleteTaskInProgress = true;
-    });
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.deleteTaskUrl(taskId),
+    final bool isDeleted = await Get.find<DeleteTaskController>().deleteTask(
+      taskId,
     );
 
-    if (response.isSuccess) {
+    if (isDeleted) {
       widget.updateData();
       showSnackBarMessage('Task Deleted Successfully');
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(Get.find<DeleteTaskController>().errorMessage!, true);
     }
-    setState(() {
-      _deleteTaskInProgress = false;
-    });
   }
 
   void _showUpdateStatusDialogue() {
@@ -189,23 +185,17 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _changeTaskStatus(String newStatus) async {
+    final bool isSuccess = await Get.find<ChangeTaskStatusController>()
+        .changeTaskStatus(widget.task.sId!, newStatus);
     Get.back();
-    setState(() {
-      _statusUpdateInProgress = true;
-    });
-
-    final NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.updateTaskStatusUrl(widget.task.sId!, newStatus),
-    );
-
-    if (response.isSuccess) {
+    if (isSuccess) {
       widget.updateData();
       showSnackBarMessage('Task marked as $newStatus');
     } else {
-      setState(() {
-        _statusUpdateInProgress = false;
-      });
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(
+        Get.find<ChangeTaskStatusController>().errorMessage!,
+        true,
+      );
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../presentation/controllers/change_task_status_controller.dart';
+import '../presentation/controllers/delete_task_controller.dart';
 import '../presentation/controllers/forgot_pass_pin_verification_controller.dart';
 import '../presentation/controllers/forgot_pass_verify_email_controller.dart';
 import '../presentation/controllers/add_new_task_controller.dart';
@@ -26,5 +28,7 @@ class ControllerBinder extends Bindings {
     Get.put(ForgotPassPinVerificationController());
     Get.put(SetPasswordController());
     Get.put(UpdateUserProfileController());
+    Get.put(DeleteTaskController());
+    Get.put(ChangeTaskStatusController());
   }
 }
