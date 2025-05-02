@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../data/models/profile_details_model.dart';
 import '../../data/models/user_model.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/update_user_profile_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/screen_background.dart';
@@ -32,8 +28,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _updateProfileInProgress = false;
 
   @override
   void initState() {
@@ -139,17 +133,21 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         return null;
                       },
                     ),
-                    Visibility(
-                      visible: _updateProfileInProgress == false,
-                      replacement: CenteredCircularProgressBar(),
-                      child: ElevatedButton(
-                        onPressed: _onTapSubmitButton,
-                        child: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          color: Colors.white,
-                          size: 21.12,
-                        ),
-                      ),
+                    GetBuilder<UpdateUserProfileController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.updateProfileInProgress == false,
+                          replacement: CenteredCircularProgressBar(),
+                          child: ElevatedButton(
+                            onPressed: _onTapSubmitButton,
+                            child: Icon(
+                              Icons.arrow_circle_right_outlined,
+                              color: Colors.white,
+                              size: 21.12,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -209,41 +207,29 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   Future<void> _updateUserProfile() async {
-    setState(() {
-      _updateProfileInProgress = true;
-    });
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-    };
-    if (_passwordTEController.text.isNotEmpty) {
-      requestBody['password'] = _passwordTEController.text;
-    }
-    if (_pickedImage != null) {
-      List<int> imageBytes = await _pickedImage!.readAsBytes();
-      String encodedImage = base64Encode(imageBytes);
-      requestBody['photo'] = encodedImage;
-    }
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: Urls.updateProfileUrl,
-      body: requestBody,
-    );
-    setState(() {
-      _updateProfileInProgress = false;
-    });
-    if (response.isSuccess) {
-      await _getProfileDetails();
+    final bool isProfileUpdated = await Get.find<UpdateUserProfileController>()
+        .updateUserProfile(
+          _emailTEController.text.trim(),
+          _firstNameTEController.text.trim(),
+          _lastNameTEController.text.trim(),
+          _mobileTEController.text.trim(),
+          _passwordTEController.text.trim(),
+          _pickedImage,
+        );
+
+    if (isProfileUpdated) {
       _passwordTEController.clear();
-      setState(() {});
       showSnackBarMessage('User Info Updated Successfully');
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(
+        Get.find<UpdateUserProfileController>().errorMessage!,
+        true,
+      );
     }
+    setState(() {});
   }
 
-  Future<void> _getProfileDetails() async {
+  /*Future<void> _getProfileDetails() async {
     NetworkResponse response = await NetworkClient.getRequest(
       url: Urls.profileDetailsUrl,
     );
@@ -257,7 +243,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     } else {
       showSnackBarMessage(response.errorMessage!, true);
     }
-  }
+  }*/
 
   @override
   void dispose() {

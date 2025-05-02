@@ -26,9 +26,7 @@ class AuthController {
     userModel = userModelData;
   }
 
-  static Future<void> saveUserInformation(
-    UserModel userModelData,
-  ) async {
+  static Future<void> saveUserInformation(UserModel userModelData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(
       _userDataKey,
@@ -50,11 +48,11 @@ class AuthController {
     token = accessToken;
   }
 
-  static Future<bool> checkIfUserLoggedIn() async{
+  static Future<bool> checkIfUserLoggedIn() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? userAccessToken = sharedPreferences.getString(_tokenKey);
 
-    if(userAccessToken != null){
+    if (userAccessToken != null) {
       await getUserInformation();
       return true;
     }

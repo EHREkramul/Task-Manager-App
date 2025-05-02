@@ -10,6 +10,7 @@ import '../presentation/controllers/new_task_controller.dart';
 import '../presentation/controllers/progress_task_controller.dart';
 import '../presentation/controllers/set_password_controller.dart';
 import '../presentation/controllers/sign_up_controller.dart';
+import '../presentation/controllers/update_user_profile_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -24,5 +25,6 @@ class ControllerBinder extends Bindings {
     Get.put(ForgotPassVerifyEmailController());
     Get.put(ForgotPassPinVerificationController());
     Get.put(SetPasswordController());
+    Get.put(UpdateUserProfileController());
   }
 }

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app/app.dart';
 import '../controllers/auth_controller.dart';
 import '../screens/login_screen.dart';
 import '../screens/update_profile_screen.dart';
