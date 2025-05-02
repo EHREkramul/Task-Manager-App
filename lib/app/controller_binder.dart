@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../presentation/controllers/add_new_task_controller.dart';
 import '../presentation/controllers/canceled_task_controller.dart';
 import '../presentation/controllers/completed_task_controller.dart';
 import '../presentation/controllers/login_controller.dart';
@@ -14,5 +15,6 @@ class ControllerBinder extends Bindings {
     Get.put(CanceledTaskController());
     Get.put(CompletedTaskController());
     Get.put(ProgressTaskController());
+    Get.put(AddNewTaskController());
   }
 }
