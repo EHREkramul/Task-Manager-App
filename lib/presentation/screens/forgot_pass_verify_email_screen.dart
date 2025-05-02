@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/forgot_pass_verify_email_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'forget_pass_pin_verification_screen.dart';
@@ -23,8 +21,6 @@ class _ForgotPassVerifyEmailScreenState
   final TextEditingController _emailTEController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _verifyEmailInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,17 +62,21 @@ class _ForgotPassVerifyEmailScreenState
                   },
                 ),
                 SizedBox(height: 15),
-                Visibility(
-                  visible: _verifyEmailInProgress == false,
-                  replacement: CenteredCircularProgressBar(),
-                  child: ElevatedButton(
-                    onPressed: _onTapSubmitButton,
-                    child: Icon(
-                      Icons.arrow_circle_right_outlined,
-                      color: Colors.white,
-                      size: 21.12,
-                    ),
-                  ),
+                GetBuilder<ForgotPassVerifyEmailController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.verifyEmailInProgress == false,
+                      replacement: CenteredCircularProgressBar(),
+                      child: ElevatedButton(
+                        onPressed: _onTapSubmitButton,
+                        child: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          color: Colors.white,
+                          size: 21.12,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 35),
                 BottomTexts(
@@ -99,23 +99,17 @@ class _ForgotPassVerifyEmailScreenState
   }
 
   Future<void> _verifyEmail() async {
-    setState(() {
-      _verifyEmailInProgress = true;
-    });
+    final bool isVerified = await Get.find<ForgotPassVerifyEmailController>()
+        .verifyEmail(_emailTEController.text.trim());
 
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.verifyEmailUrl(_emailTEController.text),
-    );
-
-    if (response.isSuccess) {
+    if (isVerified) {
       Get.to(ForgetPassPinVerificationScreen(email: _emailTEController.text));
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(
+        Get.find<ForgotPassVerifyEmailController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _verifyEmailInProgress = false;
-    });
   }
 
   @override

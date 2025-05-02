@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/forgot_pass_pin_verification_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'login_screen.dart';
@@ -26,8 +24,6 @@ class _ForgetPassPinVerificationScreenState
   final TextEditingController _pinCodeTEController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _verifyOtpInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +81,17 @@ class _ForgetPassPinVerificationScreenState
                     return null;
                   },
                 ),
-                Visibility(
-                  visible: _verifyOtpInProgress == false,
-                  replacement: CenteredCircularProgressBar(),
-                  child: ElevatedButton(
-                    onPressed: _onTapVerifyButton,
-                    child: Text('Verify'),
-                  ),
+                GetBuilder<ForgotPassPinVerificationController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.verifyOtpInProgress == false,
+                      replacement: CenteredCircularProgressBar(),
+                      child: ElevatedButton(
+                        onPressed: _onTapVerifyButton,
+                        child: Text('Verify'),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 20),
                 BottomTexts(
@@ -113,32 +113,29 @@ class _ForgetPassPinVerificationScreenState
 
   void _onTapVerifyButton() {
     if (_formKey.currentState!.validate()) {
-      _verifyEmail();
+      _verifyOTP();
     } else {
       showSnackBarMessage('Enter 6 digit pin', true);
     }
   }
 
-  Future<void> _verifyEmail() async {
-    setState(() {
-      _verifyOtpInProgress = true;
-    });
+  Future<void> _verifyOTP() async {
+    final bool isVerified =
+        await Get.find<ForgotPassPinVerificationController>().verifyOTP(
+          widget.email.trim(),
+          _pinCodeTEController.text.trim(),
+        );
 
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.verifyOtpUrl(widget.email, _pinCodeTEController.text),
-    );
-
-    if (response.isSuccess) {
+    if (isVerified) {
       Get.to(
         SetPasswordScreen(email: widget.email, otp: _pinCodeTEController.text),
       );
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(
+        Get.find<ForgotPassPinVerificationController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _verifyOtpInProgress = false;
-    });
   }
 
   @override

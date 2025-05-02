@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/set_password_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/screen_background.dart';
@@ -25,7 +23,6 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _resetPassInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +80,17 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     return null;
                   },
                 ),
-                Visibility(
-                  visible: _resetPassInProgress == false,
-                  replacement: CenteredCircularProgressBar(),
-                  child: ElevatedButton(
-                    onPressed: _onTapSubmitButton,
-                    child: Text('Confirm'),
-                  ),
+                GetBuilder<SetPasswordController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.resetPassInProgress == false,
+                      replacement: CenteredCircularProgressBar(),
+                      child: ElevatedButton(
+                        onPressed: _onTapSubmitButton,
+                        child: Text('Confirm'),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 25),
                 BottomTexts(
@@ -112,32 +113,23 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   }
 
   Future<void> _resetPassword() async {
-    setState(() {
-      _resetPassInProgress = true;
-    });
+    final bool isResetSuccess = await Get.find<SetPasswordController>()
+        .resetPassword(
+          widget.email,
+          widget.otp,
+          _confirmPassTEController.text.trim(),
+        );
 
-    Map<String, dynamic> requestBody = {
-      "email": widget.email,
-      "OTP": widget.otp,
-      "password": _confirmPassTEController.text,
-    };
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: Urls.resetPasswordUrl,
-      body: requestBody,
-    );
-
-    if (response.isSuccess) {
+    if (isResetSuccess) {
       showSnackBarMessage('Password reset successfully');
 
       Get.offAll(LoginScreen());
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(
+        Get.find<SetPasswordController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _resetPassInProgress = false;
-    });
   }
 
   void _onTapSignInButton() {
