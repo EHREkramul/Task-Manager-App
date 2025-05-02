@@ -6,6 +6,7 @@ import '../presentation/controllers/completed_task_controller.dart';
 import '../presentation/controllers/login_controller.dart';
 import '../presentation/controllers/new_task_controller.dart';
 import '../presentation/controllers/progress_task_controller.dart';
+import '../presentation/controllers/sign_up_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -16,5 +17,6 @@ class ControllerBinder extends Bindings {
     Get.put(CompletedTaskController());
     Get.put(ProgressTaskController());
     Get.put(AddNewTaskController());
+    Get.put(SignUpController());
   }
 }

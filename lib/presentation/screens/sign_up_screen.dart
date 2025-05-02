@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app/app.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/sign_up_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import 'login_screen.dart';
@@ -25,7 +22,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _registrationInProgress = false;
+
+  SignUpController signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -129,17 +127,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    Visibility(
-                      visible: _registrationInProgress == false,
-                      replacement: CenteredCircularProgressBar(),
-                      child: ElevatedButton(
-                        onPressed: _onTapSubmitButton,
-                        child: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          color: Colors.white,
-                          size: 21.12,
-                        ),
-                      ),
+                    GetBuilder<SignUpController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.registrationInProgress == false,
+                          replacement: CenteredCircularProgressBar(),
+                          child: ElevatedButton(
+                            onPressed: _onTapSubmitButton,
+                            child: Icon(
+                              Icons.arrow_circle_right_outlined,
+                              color: Colors.white,
+                              size: 21.12,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 20),
                     BottomTexts(
@@ -176,29 +178,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _registerUser() async {
-    setState(() {
-      _registrationInProgress = true;
-    });
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: Urls.registerUrl,
-      body: requestBody,
+    final bool isSuccess = await signUpController.registerUser(
+      _emailTEController.text,
+      _firstNameTEController.text,
+      _lastNameTEController.text,
+      _mobileTEController.text,
+      _passwordTEController.text,
     );
-    setState(() {
-      _registrationInProgress = false;
-    });
-    if (response.isSuccess) {
+    if (isSuccess) {
       showSnackBarMessage('User Registered Successfully');
       _clearTEControllers();
       Get.offAll(LoginScreen());
     } else {
-      showSnackBarMessage(response.errorMessage!, true);
+      showSnackBarMessage(signUpController.errorMessage!, true);
     }
   }
 
