@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:taskmanager/presentation/controllers/completed_task_controller.dart';
 
 import '../../data/models/task_list_model.dart';
 import '../../data/models/task_model.dart';
@@ -18,9 +20,6 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
-  bool _getCompletedTaskInProgress = false;
-  List<TaskModel> _taskList = <TaskModel>[];
-
   @override
   void initState() {
     _getAllCompletedTaskList();
@@ -32,43 +31,39 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Visibility(
-          visible: _getCompletedTaskInProgress == false,
-          replacement: CenteredCircularProgressBar(),
-          child:
-              _taskList.isEmpty
-                  ? NoTasksScreen()
-                  : ListView.builder(
-                    itemCount: _taskList.length,
-                    itemBuilder:
-                        (context, index) => TaskItem(
-                          statusColor: Colors.green,
-                          task: _taskList[index],
-                          updateData: _getAllCompletedTaskList,
-                        ),
-                  ),
+        child: GetBuilder<CompletedTaskController>(
+          builder: (controller) {
+            return Visibility(
+              visible: controller.getCompletedTaskInProgress == false,
+              replacement: CenteredCircularProgressBar(),
+              child:
+                  controller.taskList.isEmpty
+                      ? NoTasksScreen()
+                      : ListView.builder(
+                        itemCount: controller.taskList.length,
+                        itemBuilder:
+                            (context, index) => TaskItem(
+                              statusColor: Colors.green,
+                              task: controller.taskList[index],
+                              updateData: _getAllCompletedTaskList,
+                            ),
+                      ),
+            );
+          },
         ),
       ),
     );
   }
 
   Future<void> _getAllCompletedTaskList() async {
-    setState(() {
-      _getCompletedTaskInProgress = true;
-    });
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.completedTaskUrl,
-    );
+    final bool isSuccess =
+        await Get.find<CompletedTaskController>().getAllCompletedTaskList();
 
-    if (response.isSuccess) {
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data!);
-      _taskList = taskListModel.taskList!;
-    } else {
-      showSnackBarMessage(response.errorMessage!, true);
+    if (!isSuccess) {
+      showSnackBarMessage(
+        Get.find<CompletedTaskController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _getCompletedTaskInProgress = false;
-    });
   }
 }

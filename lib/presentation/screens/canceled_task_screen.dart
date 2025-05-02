@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../data/models/task_list_model.dart';
-import '../../data/models/task_model.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/canceled_task_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/task_item.dart';
@@ -18,9 +15,6 @@ class CanceledTaskScreen extends StatefulWidget {
 }
 
 class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
-  bool _getCanceledTaskInProgress = false;
-  List<TaskModel> _taskList = <TaskModel>[];
-
   @override
   void initState() {
     _getAllCanceledTaskList();
@@ -32,43 +26,39 @@ class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Visibility(
-          visible: _getCanceledTaskInProgress == false,
-          replacement: CenteredCircularProgressBar(),
-          child:
-              _taskList.isEmpty
-                  ? NoTasksScreen()
-                  : ListView.builder(
-                    itemCount: _taskList.length,
-                    itemBuilder:
-                        (context, index) => TaskItem(
-                          statusColor: Colors.redAccent,
-                          task: _taskList[index],
-                          updateData: _getAllCanceledTaskList,
-                        ),
-                  ),
+        child: GetBuilder<CanceledTaskController>(
+          builder: (controller) {
+            return Visibility(
+              visible: controller.getCanceledTaskInProgress == false,
+              replacement: CenteredCircularProgressBar(),
+              child:
+                  controller.taskList.isEmpty
+                      ? NoTasksScreen()
+                      : ListView.builder(
+                        itemCount: controller.taskList.length,
+                        itemBuilder:
+                            (context, index) => TaskItem(
+                              statusColor: Colors.redAccent,
+                              task: controller.taskList[index],
+                              updateData: _getAllCanceledTaskList,
+                            ),
+                      ),
+            );
+          },
         ),
       ),
     );
   }
 
   Future<void> _getAllCanceledTaskList() async {
-    setState(() {
-      _getCanceledTaskInProgress = true;
-    });
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.canceledTaskUrl,
-    );
+    final bool isSuccess =
+        await Get.find<CanceledTaskController>().getAllCanceledTaskList();
 
-    if (response.isSuccess) {
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data!);
-      _taskList = taskListModel.taskList!;
-    } else {
-      showSnackBarMessage(response.errorMessage!, true);
+    if (!isSuccess) {
+      showSnackBarMessage(
+        Get.find<CanceledTaskController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _getCanceledTaskInProgress = false;
-    });
   }
 }

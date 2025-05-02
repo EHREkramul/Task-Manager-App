@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../data/models/task_list_model.dart';
-import '../../data/models/task_model.dart';
-import '../../data/service/network_client.dart';
-import '../../data/service/network_response.dart';
-import '../../data/utils/urls.dart';
+import '../controllers/progress_task_controller.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/centered_circular_progress_bar.dart';
 import '../widgets/task_item.dart';
@@ -18,9 +15,6 @@ class ProgressTaskScreen extends StatefulWidget {
 }
 
 class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
-  bool _getProgressTaskInProgress = false;
-  List<TaskModel> _taskList = <TaskModel>[];
-
   @override
   void initState() {
     _getAllProgressTaskList();
@@ -32,43 +26,39 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Visibility(
-          visible: _getProgressTaskInProgress == false,
-          replacement: CenteredCircularProgressBar(),
-          child:
-              _taskList.isEmpty
-                  ? NoTasksScreen()
-                  : ListView.builder(
-                    itemCount: _taskList.length,
-                    itemBuilder:
-                        (context, index) => TaskItem(
-                          statusColor: Colors.purple,
-                          task: _taskList[index],
-                          updateData: _getAllProgressTaskList,
-                        ),
-                  ),
+        child: GetBuilder<ProgressTaskController>(
+          builder: (controller) {
+            return Visibility(
+              visible: controller.getProgressTaskInProgress == false,
+              replacement: CenteredCircularProgressBar(),
+              child:
+                  controller.taskList.isEmpty
+                      ? NoTasksScreen()
+                      : ListView.builder(
+                        itemCount: controller.taskList.length,
+                        itemBuilder:
+                            (context, index) => TaskItem(
+                              statusColor: Colors.purple,
+                              task: controller.taskList[index],
+                              updateData: _getAllProgressTaskList,
+                            ),
+                      ),
+            );
+          },
         ),
       ),
     );
   }
 
   Future<void> _getAllProgressTaskList() async {
-    setState(() {
-      _getProgressTaskInProgress = true;
-    });
-    NetworkResponse response = await NetworkClient.getRequest(
-      url: Urls.progressTaskUrl,
-    );
+    final bool isSuccess =
+        await Get.find<ProgressTaskController>().getAllProgressTaskList();
 
-    if (response.isSuccess) {
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data!);
-      _taskList = taskListModel.taskList!;
-    } else {
-      showSnackBarMessage(response.errorMessage!, true);
+    if (!isSuccess) {
+      showSnackBarMessage(
+        Get.find<ProgressTaskController>().errorMessage!,
+        true,
+      );
     }
-
-    setState(() {
-      _getProgressTaskInProgress = false;
-    });
   }
 }
