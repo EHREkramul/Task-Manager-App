@@ -19,7 +19,7 @@ A Native Android chat application built with Kotlin & Jectpack Compose, allowing
 
 ## 🛠️ Technologies Used
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white&style=flat)  ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white&style=flat)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white&style=flat)  ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white&style=flat) ![GetX](https://img.shields.io/badge/GetX-FF69B4?logo=flutter&logoColor=white&style=flat)
 
 ## 🤝 Contributions
 Feel free to fork this repository, make changes, and submit a pull request. Contributions are always welcome!
